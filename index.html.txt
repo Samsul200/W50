@@ -1,0 +1,88 @@
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Sheet Data</title>
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="loginForm">
+    User ID: <input type="text" id="userId" name="userId" required><br>
+    Password: <input type="password" id="password" name="password" required><br>
+    <input type="button" value="Login" onclick="checkLogin()">
+  </form>
+  <div id="content"></div>
+
+  <script>
+    const users = {
+      'SURO': 'SURO123',
+      'TAPOS': 'TAPOS123',
+      'SUBHASH': 'SUBHASH123',
+      'VIJAY': 'VIJAY123',
+      'SOMNATH': 'SOMNATH123',
+      'SAMARTH': 'SAMARTH123',
+      'KUSH': 'KUSH123',
+      'GAUR': 'GAUR123',
+      'DULAAL': 'DULAAL123',
+      'KARTIK': 'KARTIK123',
+      'GELO': 'GELO123',
+      'KELO': 'KELO123',
+      'TOTON': 'TOTON123',
+      'NANDA': 'NANDA123',
+      'BHAGO': 'BHAGO123'
+    };
+
+    function checkLogin() {
+      const userId = document.getElementById('userId').value;
+      const password = document.getElementById('password').value;
+      if (users[userId] && users[userId] === password) {
+        document.getElementById('content').innerHTML = 'Login successful. Fetching data...';
+        fetchData(userId);
+      } else {
+        document.getElementById('content').innerHTML = 'Invalid User ID or Password';
+      }
+    }
+
+    function fetchData(sheetName) {
+      const apiUrl = `https://api.sheety.co/YOUR_PROJECT_ID/${sheetName}`; // Replace YOUR_PROJECT_ID with your Sheety project ID
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          displayData(data);
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          document.getElementById('content').innerHTML = 'Error fetching data';
+        });
+    }
+
+    function displayData(data) {
+      if (!data || data.length === 0) {
+        document.getElementById('content').innerHTML = 'No data found.';
+        return;
+      }
+
+      let content = '<h2>Sheet Data</h2><table border="1">';
+      content += '<tr>';
+      content += '<th>Column A</th>';
+      content += '<th>Column B</th>';
+      content += '<th>Column C</th>';
+      content += '<th>Column D</th>';
+      content += '<th>Column E</th>';
+      content += '<th>Column F</th>';
+      content += '</tr>';
+
+      for (let i = 0; i < data.length; i++) {
+        content += '<tr>';
+        for (let j = 0; j < data[i].length; j++) {
+          content += `<td>${data[i][j]}</td>`;
+        }
+        content += '</tr>';
+      }
+      content += '</table>';
+
+      document.getElementById('content').innerHTML = content;
+    }
+  </script>
+</body>
+</html>
